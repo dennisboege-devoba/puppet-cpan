@@ -8,8 +8,9 @@ describe 'cpan' do
   describe 'valid type' do
     it { is_expected.to be_valid_type }
   end
+
   describe 'ensure' do
-    [:present, :absent, :installed, :latest].each do |value|
+    %i[present absent installed latest].each do |value|
       it "accepts #{value} as a value" do
         is_expected.to be_valid_type.with_set_attributes(ensure: value)
       end
@@ -29,6 +30,7 @@ describe 'cpan' do
     it 'accepts an absolute path' do
       is_expected.to be_valid_type.with_set_attributes(local_lib: '/path/to/file')
     end
+
     it 'accepts false' do
       is_expected.to be_valid_type.with_set_attributes(local_lib: false)
     end
@@ -43,12 +45,15 @@ describe 'cpan' do
     it 'rejects other values' do
       expect { is_expected.to be_valid_type.with_set_attributes(force: 'nope') }.to raise_error(Puppet::ResourceError)
     end
+
     it 'defaults to false' do
       expect(described_type.new(name: 'test')[:force]).to eq(false)
     end
+
     it 'munges \'false\' to false' do
       expect(described_type.new(name: 'test', force: 'false')[:force]).to eq(false)
     end
+
     it 'munges \'true\' to true' do
       expect(described_type.new(name: 'test', force: 'true')[:force]).to eq(true)
     end
@@ -56,12 +61,13 @@ describe 'cpan' do
 
   describe 'umask' do
     describe 'valid values' do
-      ['0022', '022', '0027', '027'].each do |value|
+      %w[0022 022 0027 027].each do |value|
         it "accepts #{value}" do
           is_expected.to be_valid_type.with_set_attributes(umask: value)
         end
       end
     end
+
     describe 'invalid values' do
       [true, false, 220, '0', '888', 'invalid'].each do |value|
         it "rejects #{value}" do

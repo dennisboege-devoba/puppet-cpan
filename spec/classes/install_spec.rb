@@ -29,6 +29,7 @@ describe 'cpan::install' do
           it { is_expected.not_to contain_package('perl').with(ensure: 'present') }
         end
       end
+
       describe 'should allow package ensure to be overridden' do
         let(:pre_condition) do
           [
@@ -42,6 +43,7 @@ describe 'cpan::install' do
 
         it { is_expected.to contain_package('gcc').with_ensure('latest') }
         it { is_expected.to contain_package('make').with_ensure('latest') }
+
         case os_facts[:osfamily]
         when 'Debian'
           it { is_expected.to contain_package('perl').with(ensure: 'latest') }

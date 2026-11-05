@@ -4,41 +4,28 @@ Puppet::Type.newtype(:cpan) do
   @doc = 'Install cpan modules'
   ensurable do
     newvalue(:absent) do
-      if provider.exists?
-        provider.destroy
-      end
+      provider.destroy if provider.exists?
     end
 
     newvalue(:present) do
-      unless provider.exists?
-        provider.create
-      end
+      provider.create unless provider.exists?
     end
     aliasvalue(:installed, :present)
 
     newvalue(:latest) do
-      unless provider.latest?
-        provider.update
-      end
+      provider.update unless provider.latest?
     end
 
     def insync?(is)
       @should ||= []
-      if is == :absent
-        provider.create
-      end
+      provider.create if is == :absent
       case should
       when :present
-        return true unless [:absent, :purged, :held].include?(is)
+        true unless %i[absent purged held].include?(is)
       when :latest
         return true if provider.latest?
 
-        debug 'CPAN Module %s version is out of date, installed version: %s, latest version: %s' %
-              [
-                @resource.name,
-                provider.version,
-                provider.latest,
-              ]
+        debug format('CPAN Module %s version is out of date, installed version: %s, latest version: %s', @resource.name, provider.version, provider.latest)
         false
       end
     end
