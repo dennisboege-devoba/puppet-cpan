@@ -50,7 +50,6 @@ class cpan (
   $http_proxy        = undef,
   $urllist           = [],
 ) {
-
   assert_type(Boolean, $manage_config)
   assert_type(Boolean, $manage_package)
   assert_type(String, $installdirs)
@@ -66,8 +65,7 @@ class cpan (
   assert_type(Array, $urllist)
 
   anchor { 'cpan::begin': }
-  -> class { '::cpan::install': }
-  -> class { '::cpan::config': }
+  -> class { 'cpan::install': }
+  -> class { 'cpan::config': }
   -> anchor { 'cpan::end': }
-
 }

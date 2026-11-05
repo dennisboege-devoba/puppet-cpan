@@ -3,7 +3,7 @@ Puppet::Type.type(:cpan).provide(:default) do
 
   commands cpan: 'cpan'
   commands perl: 'perl'
-  confine  osfamily: [:Debian, :RedHat, :Windows]
+  confine  osfamily: %i[Debian RedHat Windows]
   ENV['PERL_MM_USE_DEFAULT'] = '1'
 
   def install; end
@@ -11,18 +11,14 @@ Puppet::Type.type(:cpan).provide(:default) do
   def force; end
 
   def version
-    if resource[:local_lib]
-      ll = "-Mlocal::lib=#{resource[:local_lib]}"
-    end
+    ll = "-Mlocal::lib=#{resource[:local_lib]}" if resource[:local_lib]
     current_version = `perl #{ll} -M#{resource[:name]} -e 'print $#{resource[:name]}::VERSION'`
     current_version.chomp
     current_version
   end
 
   def latest
-    if resource[:local_lib]
-      ll = "-Mlocal::lib=#{resource[:local_lib]}"
-    end
+    ll = "-Mlocal::lib=#{resource[:local_lib]}" if resource[:local_lib]
     cpan_str = `perl #{ll} -e 'use CPAN; my $mod=CPAN::Shell->expand("Module","#{resource[:name]}"); \
                 printf("%s", $mod->cpan_version eq "undef" || !defined($mod->cpan_version) ? "-" : $mod->cpan_version);'`
     latest_version = cpan_str.match(%r{^[0-9]+.?[0-9]*$})[0]
@@ -33,17 +29,14 @@ Puppet::Type.type(:cpan).provide(:default) do
   def latest?
     current_version = version
     latest_version = latest
-    if current_version < latest_version
-      return false
-    end
+    return false if current_version < latest_version
+
     true
   end
 
   def create
     Puppet.info("Installing cpan module #{resource[:name]}")
-    if resource[:local_lib]
-      ll = "-Mlocal::lib=#{resource[:local_lib]}"
-    end
+    ll = "-Mlocal::lib=#{resource[:local_lib]}" if resource[:local_lib]
 
     umask = "umask #{resource[:umask]};" if resource[:umask]
     if resource[:environment]
@@ -81,9 +74,7 @@ Puppet::Type.type(:cpan).provide(:default) do
   def update
     Puppet.info("Upgrading cpan module #{resource[:name]}")
     Puppet.debug("cpan #{resource[:name]}")
-    if resource[:local_lib]
-      ll = "-Mlocal::lib=#{resource[:local_lib]}"
-    end
+    ll = "-Mlocal::lib=#{resource[:local_lib]}" if resource[:local_lib]
     umask = "umask #{resource[:umask]};" if resource[:umask]
     if resource[:environment]
       resource[:environment].each do |var, val|
@@ -103,9 +94,7 @@ Puppet::Type.type(:cpan).provide(:default) do
   end
 
   def exists?
-    if resource[:local_lib]
-      ll = "-Mlocal::lib=#{resource[:local_lib]}"
-    end
+    ll = "-Mlocal::lib=#{resource[:local_lib]}" if resource[:local_lib]
     exists_command = case resource[:exists_strategy]
                      when :find
                        # stolen from pmtools/pmpath
