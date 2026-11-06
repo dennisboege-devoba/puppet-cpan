@@ -10,32 +10,36 @@
   "dependencies": [
     {
       "name": "puppetlabs-stdlib",
-      "version_requirement": ">= 4.6.0 < 11.0.0"
+      "version_requirement": ">= 9.0.0 < 11.0.0"
     }
   ],
   "operatingsystem_support": [
     {
-      "operatingsystem": "RedHat",
+      "operatingsystem": "Debian",
       "operatingsystemrelease": [
-        "5",
-        "6",
-        "7",
-        "8",
-        "9"
+        "12",
+        "13"
       ]
     },
     {
-      "operatingsystem": "Debian",
+      "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
-        "6",
-        "7"
+        "22.04",
+        "24.04"
+      ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "8",
+        "9"
       ]
     }
   ],
   "requirements": [
     {
-      "name": "puppet",
-      "version_requirement": ">= 4.10.0 < 9.0.0"
+      "name": "openvox",
+      "version_requirement": ">= 8.0.0 < 9.0.0"
     }
   ],
   "description": "Puppet module for installing and configuring the Marathon framework for Mesos.",
