@@ -20,7 +20,7 @@ describe 'cpan::install' do
         it { is_expected.to contain_package('gcc').with(ensure: 'present') }
         it { is_expected.to contain_package('make').with(ensure: 'present') }
 
-        case os_facts[:osfamily]
+        case os_facts[:os]['family']
         when 'Debian'
           it { is_expected.to contain_package('perl').with(ensure: 'present') }
           it { is_expected.not_to contain_package('perl-CPAN').with(ensure: 'present') }
@@ -44,7 +44,7 @@ describe 'cpan::install' do
         it { is_expected.to contain_package('gcc').with_ensure('latest') }
         it { is_expected.to contain_package('make').with_ensure('latest') }
 
-        case os_facts[:osfamily]
+        case os_facts[:os]['family']
         when 'Debian'
           it { is_expected.to contain_package('perl').with(ensure: 'latest') }
         when 'RedHat'
